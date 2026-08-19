@@ -1,0 +1,238 @@
+groups:
+  - name: eltex-router
+    interval: 30s
+    rules:
+      - alert: EltexExporterDown
+        expr: up{job="eltex-router"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: eltex
+        annotations:
+          summary: "Eltex exporter недоступен"
+          description: "Prometheus не может получить метрики Eltex более 2 минут."
+          threshold: "up == 0 в течение 2 минут"
+          action: "Проверить eltex-exporter.service, <ELTEX_HOST>:9824 и маршрут к роутеру."
+          dashboard_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1"
+          panel_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1&viewPanel=1"
+      - alert: EltexFastCollectionFailed
+        expr: eltex_collection_success{job="eltex-router",collector="fast"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: eltex
+        annotations:
+          summary: "Быстрый сбор Eltex не работает"
+          description: "Не собираются native JSON показатели CPU, RAM, WAN и interfaces."
+          threshold: "fast collector == 0 в течение 2 минут"
+          action: "Проверить XDigest, session cookie, учётную запись admin и journalctl."
+          dashboard_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1"
+          panel_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1&viewPanel=1"
+      - alert: EltexLegacyCollectionFailed
+        expr: eltex_collection_success{job="eltex-router",collector="legacy"} == 0
+        for: 3m
+        labels:
+          severity: warning
+          component: eltex
+        annotations:
+          summary: "Legacy HTML сбор Eltex не работает"
+          description: "Не обновляются PON optics, LAN status или legacy counters."
+          threshold: "legacy collector == 0 в течение 3 минут"
+          action: "Проверить legacy pages, session и изменения HTML после обновления firmware."
+          dashboard_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1"
+          panel_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1&viewPanel=1"
+      - alert: EltexCollectionStale
+        expr: time() - eltex_last_success_timestamp_seconds{job="eltex-router"} > 180
+        for: 2m
+        labels:
+          severity: critical
+          component: eltex
+        annotations:
+          summary: "Метрики Eltex устарели"
+          description: "Collector {{ $labels.collector }} не имеет успешного результата более 180 секунд."
+          threshold: "возраст результата больше 180 секунд"
+          action: "Проверить exporter, web UI Eltex и доступность eltex-device.example."
+          dashboard_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1"
+          panel_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1&viewPanel=2"
+      - alert: EltexPONNotOperational
+        expr: eltex_pon_operational{job="eltex-router"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: pon
+        annotations:
+          summary: "ONU Eltex не в состоянии O5"
+          description: "GPON ONU потеряла operational state O5."
+          threshold: "PON operational == 0 в течение 1 минуты"
+          action: "Проверить оптическую линию, коннекторы, Rx power, LOS и состояние OLT."
+          dashboard_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1"
+          panel_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1&viewPanel=8"
+      - alert: EltexWANDown
+        expr: eltex_wan_up{job="eltex-router"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: wan
+        annotations:
+          summary: "WAN Eltex недоступен"
+          description: "WAN интерфейс {{ $labels.interface }} не подключён."
+          threshold: "WAN up == 0 в течение 2 минут"
+          action: "Проверить PPPoE, PON state, provider и WAN configuration."
+          dashboard_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1"
+          panel_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1&viewPanel=9"
+      - alert: EltexPONRxPowerLow
+        expr: eltex_pon_rx_power_dbm{job="eltex-router"} < -25 and eltex_pon_rx_power_dbm{job="eltex-router"} >= -27
+        for: 10m
+        labels:
+          severity: warning
+          component: pon
+        annotations:
+          summary: "Низкая мощность приёма PON"
+          description: "Rx power ниже -25 dBm: {{ $value | printf \"%.2f\" }} dBm."
+          threshold: "Rx от -27 до -25 dBm в течение 10 минут"
+          action: "Проверить загрязнение коннекторов, перегибы, splitter и optical budget."
+          dashboard_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1"
+          panel_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1&viewPanel=6"
+      - alert: EltexPONRxPowerCritical
+        expr: eltex_pon_rx_power_dbm{job="eltex-router"} < -27
+        for: 5m
+        labels:
+          severity: critical
+          component: pon
+        annotations:
+          summary: "Критически низкая мощность PON"
+          description: "Rx power приблизилась к пределу чувствительности: {{ $value | printf \"%.2f\" }} dBm."
+          threshold: "Rx ниже -27 dBm в течение 5 минут"
+          action: "Срочно проверить optical line и OLT; возможна потеря O5."
+          dashboard_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1"
+          panel_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1&viewPanel=6"
+      - alert: EltexPONRxPowerHigh
+        expr: eltex_pon_rx_power_dbm{job="eltex-router"} > -8
+        for: 10m
+        labels:
+          severity: warning
+          component: pon
+        annotations:
+          summary: "Слишком высокая мощность приёма PON"
+          description: "Rx power выше -8 dBm: {{ $value | printf \"%.2f\" }} dBm."
+          threshold: "Rx выше -8 dBm в течение 10 минут"
+          action: "Проверить optical budget и допустимый уровень сигнала ONT."
+          dashboard_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1"
+          panel_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1&viewPanel=6"
+      - alert: EltexPONTxPowerOutOfRange
+        expr: eltex_pon_tx_power_dbm{job="eltex-router"} < 0.5 or eltex_pon_tx_power_dbm{job="eltex-router"} > 5
+        for: 10m
+        labels:
+          severity: warning
+          component: pon
+        annotations:
+          summary: "Tx power PON вне диапазона"
+          description: "Tx power вне 0.5–5 dBm: {{ $value | printf \"%.2f\" }} dBm."
+          threshold: "Tx вне 0.5–5 dBm в течение 10 минут"
+          action: "Проверить optical module, температуру и питание ONT."
+          dashboard_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1"
+          panel_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1&viewPanel=6"
+      - alert: EltexPONTemperatureHigh
+        expr: eltex_pon_temperature_celsius{job="eltex-router"} > 75
+        for: 10m
+        labels:
+          severity: warning
+          component: pon
+        annotations:
+          summary: "Высокая температура PON module"
+          description: "Температура optical module выше 75°C: {{ $value | printf \"%.1f\" }}°C."
+          threshold: "температура выше 75°C в течение 10 минут"
+          action: "Проверить вентиляцию, размещение роутера и температуру помещения."
+          dashboard_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1"
+          panel_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1&viewPanel=5"
+      - alert: EltexPONTemperatureCritical
+        expr: eltex_pon_temperature_celsius{job="eltex-router"} > 85
+        for: 5m
+        labels:
+          severity: critical
+          component: pon
+        annotations:
+          summary: "Критическая температура PON module"
+          description: "Температура optical module выше 85°C: {{ $value | printf \"%.1f\" }}°C."
+          threshold: "температура выше 85°C в течение 5 минут"
+          action: "Немедленно проверить охлаждение и состояние ONT."
+          dashboard_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1"
+          panel_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1&viewPanel=5"
+      - alert: EltexMemoryUsageHigh
+        expr: eltex_memory_usage_percent{job="eltex-router"} > 90
+        for: 15m
+        labels:
+          severity: warning
+          component: eltex
+        annotations:
+          summary: "Высокое использование памяти Eltex"
+          description: "Использование RAM выше 90%: {{ $value | printf \"%.1f\" }}%."
+          threshold: "RAM выше 90% в течение 15 минут"
+          action: "Проверить uptime, services, sessions и возможную утечку памяти firmware."
+          dashboard_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1"
+          panel_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1&viewPanel=4"
+      - alert: EltexLANPortDown
+        expr: eltex_port_up{job="eltex-router",interface=~"LAN[1-4]"} == 0
+        for: 5m
+        labels:
+          severity: warning
+          component: lan
+        annotations:
+          summary: "LAN порт Eltex отключён"
+          description: "Порт {{ $labels.interface }} находится в состоянии Down."
+          threshold: "LAN port up == 0 в течение 5 минут"
+          action: "Проверить кабель, питание устройства, speed negotiation и физический порт."
+          dashboard_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1"
+          panel_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1&viewPanel=9"
+      - alert: EltexWiredInterfaceErrors
+        expr: increase(eltex_interface_errors_total{job="eltex-router",interface=~"LAN [1-4]|ppp0_nas0_0"}[10m]) > 0
+        for: 2m
+        labels:
+          severity: warning
+          component: network
+        annotations:
+          summary: "Ошибки wired interface Eltex"
+          description: "Интерфейс {{ $labels.interface }} имеет новые {{ $labels.direction }} errors."
+          threshold: "больше 0 новых errors за 10 минут"
+          action: "Проверить кабель, duplex, MTU, PPPoE и физическую линию."
+          dashboard_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1"
+          panel_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1&viewPanel=13"
+      - alert: EltexWiFiTransmitErrorsHigh
+        expr: increase(eltex_interface_errors_total{job="eltex-router",interface=~"Wi-Fi.*",direction="transmit"}[10m]) > 1000
+        for: 5m
+        labels:
+          severity: warning
+          component: wifi
+        annotations:
+          summary: "Высокий рост ошибок Wi-Fi"
+          description: "Wi-Fi interface {{ $labels.interface }} добавил более 1000 Tx errors за 10 минут."
+          threshold: "больше 1000 Tx errors за 10 минут"
+          action: "Проверить channel utilization, interference, clients, channel width и signal levels."
+          dashboard_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1"
+          panel_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1&viewPanel=13"
+      - alert: EltexPONFECErrorsGrowing
+        expr: increase(eltex_pon_fec_errors_total{job="eltex-router"}[10m]) > 100
+        for: 5m
+        labels:
+          severity: warning
+          component: pon
+        annotations:
+          summary: "Рост FEC ошибок PON"
+          description: "За 10 минут появилось более 100 FEC errors."
+          threshold: "больше 100 FEC errors за 10 минут"
+          action: "Проверить Rx power, optical connectors, splitter и качество линии."
+          dashboard_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1"
+          panel_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1&viewPanel=16"
+      - alert: EltexPONHECErrorsDetected
+        expr: increase(eltex_pon_hec_errors_total{job="eltex-router"}[10m]) > 0
+        for: 2m
+        labels:
+          severity: critical
+          component: pon
+        annotations:
+          summary: "Обнаружены HEC ошибки PON"
+          description: "PON сообщил новые HEC errors за 10 минут."
+          threshold: "больше 0 HEC errors за 10 минут"
+          action: "Проверить optical line и состояние OLT; сопоставить с FEC и Rx power."
+          dashboard_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1"
+          panel_url: "http://monitored-client.example:3000/d/eltex-router/eltex-router?orgId=1&viewPanel=16"

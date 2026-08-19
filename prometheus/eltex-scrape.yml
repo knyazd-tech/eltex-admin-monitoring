@@ -1,0 +1,12 @@
+scrape_configs:
+  - job_name: eltex
+    scrape_interval: 30s
+    scrape_timeout: 10s
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - eltex-exporter.example:9824
+        labels:
+          vendor: eltex
+          device: optical-network-terminal
+          role: gateway

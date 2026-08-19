@@ -1,0 +1,232 @@
+[
+  {
+    "metric": "eltex_arp_entries",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_bosa_calibrated",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_collection_duration_seconds",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_collection_errors_total",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_collection_success",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_cpu_usage_percent",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_info",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_interface_bytes_total",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_interface_drops_total",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_interface_errors_total",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_interface_packets_total",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_interface_up",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_last_success_timestamp_seconds",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_memory_free_bytes",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_memory_total_bytes",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_memory_usage_percent",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_memory_used_bytes",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_omci_vlan_info",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_bias_current_milliamps",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_dropped_packets_total",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_fec_errors_total",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_hec_errors_total",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_onu_state_info",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_operational",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_receive_broadcast_packets_total",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_receive_bytes_total",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_receive_delayed_packets_total",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_receive_multicast_packets_total",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_receive_packets_total",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_receive_unicast_packets_total",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_rx_power_dbm",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_temperature_celsius",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_transmit_broadcast_packets_total",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_transmit_bytes_total",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_transmit_delayed_packets_total",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_transmit_multicast_packets_total",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_transmit_packets_total",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_transmit_unicast_packets_total",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_tx_power_dbm",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_pon_voltage_volts",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_port_full_duplex",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_port_speed_bits",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_port_up",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_up",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_uptime_seconds",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  },
+  {
+    "metric": "eltex_wan_up",
+    "namespace": "eltex",
+    "source": "eltex-exporter"
+  }
+]

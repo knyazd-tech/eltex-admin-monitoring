@@ -1,0 +1,33 @@
+[Unit]
+Description=Eltex read-only Prometheus exporter
+Documentation=https://github.com/knyazd-tech/eltex-admin-monitoring
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=eltex-exporter
+Group=eltex-exporter
+EnvironmentFile=/etc/eltex-exporter/credentials
+ExecStart=/usr/bin/python3 /opt/eltex-exporter/eltex_exporter.py
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=15
+
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+RestrictAddressFamilies=AF_INET AF_INET6
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target
