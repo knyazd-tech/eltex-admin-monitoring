@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.1
+
+- Added GitHub Actions package validation.
+- Added contribution guidance.
+- Added a publication checklist.
+- Added automated exporter image build validation.
+
 ## 1.0.0
 
 - Initial standalone exporter package.

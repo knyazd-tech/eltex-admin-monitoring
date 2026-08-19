@@ -1,0 +1,87 @@
+name: Validate
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package:
+    name: Package validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile exporter
+        run: |
+          python -m py_compile \
+            exporter/eltex_exporter.py
+
+      - name: Validate package
+        run: |
+          python \
+            tests/validate_package.py
+
+      - name: Validate Prometheus rules
+        run: |
+          docker run \
+            --rm \
+            --entrypoint /bin/promtool \
+            --volume \
+            "$PWD/prometheus/rules:/rules:ro" \
+            prom/prometheus:v3.13.2 \
+            check rules \
+            /rules/eltex-alerts.yml
+
+      - name: Validate Compose
+        run: |
+          cp \
+            .env.example \
+            .env
+
+          trap 'rm -f .env' EXIT
+
+          docker compose \
+            --file compose.yaml \
+            config \
+            --quiet
+
+      - name: Build exporter image
+        run: |
+          docker build \
+            --tag \
+            eltex-admin-monitoring:ci \
+            .
+
+      - name: Check tracked files
+        run: |
+          rm -rf \
+            exporter/__pycache__ \
+            tests/__pycache__
+
+          test -z "$(
+            git status \
+              --porcelain \
+              --untracked-files=all
+          )"
