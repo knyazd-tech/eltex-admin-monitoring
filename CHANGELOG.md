@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.2
+
+- Updated GitHub Actions to Node.js 24 compatible versions.
+- Completed the final publication checklist.
+- Revalidated privacy, Prometheus rules, Compose, and image build.
+- Prepared the first public GitHub release.
+
 ## 1.0.1
 
 - Added GitHub Actions package validation.
